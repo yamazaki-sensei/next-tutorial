@@ -28,3 +28,27 @@ export const getSortedPostData = () => {
     }
   });
 };
+
+export const getAllPostIds = () => {
+  const fileNames = fs.readdirSync(postsDirectory);
+
+  return fileNames.map((fn) => {
+    return {
+      params: {
+        id: fn.replace(/\.md$/, ""),
+      },
+    };
+  });
+};
+
+export const getPostData = (id) => {
+  const fullPath = path.join(postsDirectory, `${id}.md`);
+  const fileContents = fs.readFileSync(fullPath, "utf8");
+
+  const matterResult = matter(fileContents);
+
+  return {
+    id,
+    ...matterResult.data,
+  };
+};
